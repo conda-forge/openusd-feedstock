@@ -16,18 +16,6 @@ source:
 
 build:
   number: 0
-  skip:
-    # osx requires the use of macOS SDK 10.14 via the use of MTLIndirectCommandBuffer, see:
-    # https://github.com/PixarAnimationStudios/OpenUSD/blob/v25.05/BUILDING.md?plain=1#L110
-    # So in staged-recipe we skip it, and then the build will be enabled in the feedstock
-    - osx
-    # Windows fails due to the CI running out of disk space, see
-    # https://github.com/conda-forge/staged-recipes/pull/29501#issuecomment-2838524046
-    # it will be enabled in the feedstock
-    - win
-    # openusd builds are quite long, so we only build for Python 3.11 and 3.12 in staged-recipes,
-    # more Python version will be unblocked in the feedstock
-    - match(python, "<3.11")
 
 requirements:
   build:
