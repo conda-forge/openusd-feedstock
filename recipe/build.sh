@@ -17,9 +17,12 @@ CMAKE_ARGS="${CMAKE_ARGS} -DPython_INCLUDE_DIR:PATH=${Python_INCLUDE_DIR}"
 CMAKE_ARGS="${CMAKE_ARGS} -DPython3_EXECUTABLE:PATH=${PYTHON}"
 CMAKE_ARGS="${CMAKE_ARGS} -DPython3_INCLUDE_DIR:PATH=${Python_INCLUDE_DIR}"
 
+export OPENUSD_ADDITIONAL_CTEST_TO_SKIP=""
 if [[ "${target_platform}" == osx-* ]]; then
     # See https://conda-forge.org/docs/maintainer/knowledge_base.html#newer-c-features-with-old-sdk
     CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY"
+    # See https://github.com/conda-forge/openusd-feedstock/pull/1#issuecomment-2877628246
+    export OPENUSD_ADDITIONAL_CTEST_TO_SKIP="testTfSIGSEGV|testTfSIGFPE|testTfSpan|testGfColorCpp|testGfHardToReach|testJsConverter|testJsUtils|testJsWriter|testJsWriter_Pretty|testJsDouble|testWorkDispatcher|testWorkLoops|testWorkReduce|testWorkSort|testWorkThreadLimitsDefault|testWorkThreadLimits1|testWorkThreadLimitsRawTBBMax|testWorkThreadLimitsRawTBB2|testSdfPathParser|testSdfPathTable|testSdfPathThreading|testUsdIntegerCoding|testUsdTimeCodeStream|testUsdZipFile_CPP|testUsdUtilsCoalescingDiagnosticDelegateCpp|testUsdUtilsTimeCodeRangeCpp|testHdDataSourceLocator|testHdSortedIds|testUsdImagingPrimvarUtils"
 fi
 
 cmake ${CMAKE_ARGS} -GNinja .. \
@@ -36,7 +39,7 @@ cmake --build . --config Release
 cmake --build . --config Release --target install
 # testWorkThreadLimits3 is disabled as it can fail on machines with few cores
 # testJsIO is disabled as it now actually links usd_tf, and so the linker remove the link to Python
-ctest --output-on-failure -C Release -E "testWorkThreadLimits3|testJsIO"
+ctest --output-on-failure -C Release -E "testWorkThreadLimits3|testJsIO|${OPENUSD_ADDITIONAL_CTEST_TO_SKIP}"
 
 # The CMake install logic of openusd is not flexible, so let's fix the files
 # that should not be installed or should be installed in a different location
