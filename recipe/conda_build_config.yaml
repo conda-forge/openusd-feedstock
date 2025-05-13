@@ -1,6 +1,6 @@
 # metal is required so the minimum macos version is 11.00 see
 # https://github.com/conda-forge/staged-recipes/pull/29501#issue-2940521966
-c_stdlib_version:          # [osx and x86_64]
-  - "11.00"                # [osx and x86_64]
-MACOSX_SDK_VERSION:        # [osx and x86_64]
-  - "11.00"                # [osx and x86_64]
+c_stdlib_version:         # [osx and x86_64]
+  - "11.0"                # [osx and x86_64]
+MACOSX_SDK_VERSION:       # [osx and x86_64]
+  - "11.0"                # [osx and x86_64]
