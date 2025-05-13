@@ -15,7 +15,7 @@ source:
       - link_python_to_executables.patch
 
 build:
-  number: 0
+  number: 1
   skip:
     # osx requires the use of macOS SDK 10.14 via the use of MTLIndirectCommandBuffer, see:
     # https://github.com/PixarAnimationStudios/OpenUSD/blob/v25.05/BUILDING.md?plain=1#L110
