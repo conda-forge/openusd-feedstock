@@ -42,6 +42,9 @@ requirements:
     - python
     # Without tbb-devel, CMake's find_package(pxr REQUIRED) fails
     - tbb-devel
+    # Required by usdview
+    - pyside6
+    - pyopengl
   run_exports:
     - ${{ pin_subpackage(name, upper_bound='x.x') }}
 
@@ -60,6 +63,7 @@ tests:
     script:
       - cmake-package-check pxr
       - usdInitSchema --help
+      - usdview --help
       - if: win
         then:
           - pip list | findstr "usd-core"
