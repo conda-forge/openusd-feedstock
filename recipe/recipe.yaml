@@ -15,7 +15,7 @@ source:
       - link_python_to_executables.patch
 
 build:
-  number: 1
+  number: 2
   skip:
     - win
 
