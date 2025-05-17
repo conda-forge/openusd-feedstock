@@ -25,6 +25,11 @@ if [[ "${target_platform}" == osx-* ]]; then
     export OPENUSD_ADDITIONAL_CTEST_TO_SKIP="testTfSIGSEGV|testTfSIGFPE|testTfSpan|testGfColorCpp|testGfHardToReach|testJsConverter|testJsUtils|testJsWriter|testJsWriter_Pretty|testJsDouble|testWorkDispatcher|testWorkLoops|testWorkReduce|testWorkSort|testWorkThreadLimitsDefault|testWorkThreadLimits1|testWorkThreadLimitsRawTBBMax|testWorkThreadLimitsRawTBB2|testSdfPathParser|testSdfPathTable|testSdfPathThreading|testUsdIntegerCoding|testUsdTimeCodeStream|testUsdZipFile_CPP|testUsdUtilsCoalescingDiagnosticDelegateCpp|testUsdUtilsTimeCodeRangeCpp|testHdDataSourceLocator|testHdSortedIds|testUsdImagingPrimvarUtils"
 fi
 
+if [[ "${build_platform}" != "${target_platform}" ]]; then
+    # Workaround for pyside6-uic not actually redirecting to the correct qt6-main uic
+    CMAKE_ARGS="${CMAKE_ARGS} -DPYSIDEUICBINARY=$BUILD_PREFIX/lib/qt6/uic"
+fi
+
 cmake ${CMAKE_ARGS} -GNinja .. \
       -DCMAKE_BUILD_TYPE=Release \
       -DBUILD_TESTING:BOOL=ON \
