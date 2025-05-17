@@ -13,11 +13,10 @@ source:
     sha256: 231faca9ab71fa63d6c1e0da18bda0c365f82d9bef1cfd4b3d3d6784c8d5fb96
     patches:
       - link_python_to_executables.patch
+      - add_pxr_install_dll_in_bin.patch
 
 build:
   number: 2
-  skip:
-    - win
 
 requirements:
   build:
@@ -71,6 +70,12 @@ tests:
           - pip list | findstr "usd-core"
         else:
           - test $(pip list | grep usd-core | tr -s " " | grep ${PKG_VERSION/\.0/.} | wc -l) -eq 1
+  - files:
+      recipe:
+        - openusd_plugins_sanity_check.py
+    script:
+      # Specify the minimum number of usd plugins that should be found in the package
+      - python openusd_plugins_sanity_check.py 40
   - python:
       imports:
         - pxr
