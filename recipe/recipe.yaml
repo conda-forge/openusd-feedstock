@@ -26,6 +26,10 @@ requirements:
     - ${{ compiler('cxx') }}
     - ninja
     - cmake
+    - if: build_platform != target_platform
+      then:
+        - cross-python_${{ target_platform }}
+        - python
   host:
     - if: linux
       then:
