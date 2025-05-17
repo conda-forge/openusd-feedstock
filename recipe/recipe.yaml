@@ -60,14 +60,10 @@ tests:
         - pxr/pxr.h
       lib:
         - usd_usd
-  - requirements:
-      run:
-        - cmake-package-check
-        - ${{ compiler('c') }}
-        - ${{ compiler('cxx') }}
-        - pip
-    script:
+  - script:
       - cmake-package-check pxr
+      # Specify the minimum number of usd plugins that should be found in the package
+      - python openusd_plugins_sanity_check.py 40
       - usdInitSchema --help
       - usdview --help
       - if: win
@@ -75,12 +71,15 @@ tests:
           - pip list | findstr "usd-core"
         else:
           - test $(pip list | grep usd-core | tr -s " " | grep ${PKG_VERSION/\.0/.} | wc -l) -eq 1
-  - files:
+    files:
       recipe:
         - openusd_plugins_sanity_check.py
-    script:
-      # Specify the minimum number of usd plugins that should be found in the package
-      - python openusd_plugins_sanity_check.py 40
+    requirements:
+      run:
+        - cmake-package-check
+        - ${{ compiler('c') }}
+        - ${{ compiler('cxx') }}
+        - pip
   - python:
       imports:
         - pxr
