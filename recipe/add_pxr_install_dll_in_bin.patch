@@ -1,0 +1,170 @@
+From 9454885c439073ace12b002f270777bbd0a60c5a Mon Sep 17 00:00:00 2001
+From: Silvio Traversaro <silvio@traversaro.it>
+Date: Sat, 17 May 2025 11:00:56 +0200
+Subject: [PATCH] Add PXR_INSTALL_DLL_IN_BIN CMake option to install .dll in
+ bin
+
+---
+ cmake/defaults/Options.cmake |  2 ++
+ cmake/macros/Private.cmake   | 26 +++++++++++++++++++++-----
+ cmake/macros/Public.cmake    | 19 +++++++++++++++----
+ 3 files changed, 38 insertions(+), 9 deletions(-)
+
+diff --git a/cmake/defaults/Options.cmake b/cmake/defaults/Options.cmake
+index cce89760c9..a3da5e88f1 100644
+--- a/cmake/defaults/Options.cmake
++++ b/cmake/defaults/Options.cmake
+@@ -38,6 +38,8 @@ option(PXR_ENABLE_NAMESPACES "Enable C++ namespaces." ON)
+ option(PXR_PREFER_SAFETY_OVER_SPEED
+        "Enable certain checks designed to avoid crashes or out-of-bounds memory reads with malformed input files.  These checks may negatively impact performance."
+         ON)
++option(PXR_INSTALL_DLL_IN_BIN
++       "By default, openusd on Windows installs .dll in install_prefix/lib, by enabling this option .dll are installed in bin." OFF)
+ 
+ if(APPLE)
+     # Cross Compilation detection as defined in CMake docs
+diff --git a/cmake/macros/Private.cmake b/cmake/macros/Private.cmake
+index 6fe1134c14..26f49655f9 100644
+--- a/cmake/macros/Private.cmake
++++ b/cmake/macros/Private.cmake
+@@ -260,6 +260,7 @@ function(_install_resource_files NAME pluginInstallPrefix pluginToLibraryPath)
+     #                     resourceFileC
+     #                 ...
+     #
++
+     _get_resources_dir(${pluginInstallPrefix} ${NAME} resourcesPath)
+ 
+     foreach(resourceFile ${ARGN})
+@@ -1216,7 +1217,11 @@ function(_pxr_library NAME)
+             _get_install_dir("plugin/usd" pluginInstallPrefix)
+         endif()
+     else()
+-        _get_install_dir("lib/usd" pluginInstallPrefix)
++        if(PXR_INSTALL_DLL_IN_BIN AND WIN32)
++            _get_install_dir("bin/usd" pluginInstallPrefix)
++        else()
++            _get_install_dir("lib/usd" pluginInstallPrefix)
++        endif()
+     endif()
+     if(args_SUBDIR)
+         set(pluginInstallPrefix "${pluginInstallPrefix}/${args_SUBDIR}")
+@@ -1297,6 +1302,7 @@ function(_pxr_library NAME)
+     _get_install_dir("include" headerInstallDir)
+     _get_install_dir("include/${PXR_PREFIX}/${NAME}" headerInstallPrefix)
+     _get_install_dir("lib" libInstallPrefix)
++    _get_install_dir("bin" binInstallPrefix)
+     if(isPlugin)
+         if(NOT isObject)
+             # A plugin embedded in the monolithic library is found in
+@@ -1344,10 +1350,15 @@ function(_pxr_library NAME)
+     # pluginToLibraryPath empty.
+     if(NOT args_TYPE STREQUAL "STATIC")
+         if(NOT (";${PXR_CORE_LIBS};" MATCHES ";${NAME};" AND _building_monolithic))
++            if(PXR_INSTALL_DLL_IN_BIN AND WIN32 AND NOT isPlugin)
++                set(runtimeInstallPrefix "${binInstallPrefix}")
++            else()
++                set(runtimeInstallPrefix "${libInstallPrefix}")
++            endif()
+             file(RELATIVE_PATH
+                 pluginToLibraryPath
+                 ${CMAKE_INSTALL_PREFIX}/${pluginInstallPrefix}/${NAME}
+-                ${CMAKE_INSTALL_PREFIX}/${libInstallPrefix}/${libraryFilename})
++                ${CMAKE_INSTALL_PREFIX}/${runtimeInstallPrefix}/${libraryFilename})
+         endif()
+     endif()
+ 
+@@ -1476,6 +1487,11 @@ function(_pxr_library NAME)
+     if(isObject)
+         # Nothing
+     else()
++        if(PXR_INSTALL_DLL_IN_BIN)
++            set(runtimeInstallPrefix "${binInstallPrefix}")
++        else()
++            set(runtimeInstallPrefix "${libInstallPrefix}")
++        endif()
+         # Do not include plugins libs in externally linkable targets
+         if(isPlugin)
+             install(
+@@ -1497,13 +1513,13 @@ function(_pxr_library NAME)
+                 EXPORT pxrTargets
+                 LIBRARY DESTINATION ${libInstallPrefix}
+                 ARCHIVE DESTINATION ${libInstallPrefix}
+-                RUNTIME DESTINATION ${libInstallPrefix}
++                RUNTIME DESTINATION ${runtimeInstallPrefix}
+             )
+             if(WIN32)
+                 install(
+                     FILES $<TARGET_PDB_FILE:${NAME}>
+                     EXPORT pxrTargets
+-                    DESTINATION ${libInstallPrefix}
++                    DESTINATION ${runtimeInstallPrefix}
+                     OPTIONAL
+                 )
+             endif()
+@@ -1513,7 +1529,7 @@ function(_pxr_library NAME)
+                 EXPORT pxrTargets
+                 LIBRARY DESTINATION ${libInstallPrefix}
+                 ARCHIVE DESTINATION ${libInstallPrefix}
+-                RUNTIME DESTINATION ${libInstallPrefix}
++                RUNTIME DESTINATION ${runtimeInstallPrefix}
+             )
+         endif()
+     
+diff --git a/cmake/macros/Public.cmake b/cmake/macros/Public.cmake
+index 2647707ac6..49a3ff80a7 100644
+--- a/cmake/macros/Public.cmake
++++ b/cmake/macros/Public.cmake
+@@ -988,12 +988,17 @@ function(pxr_setup_plugins)
+ 
+     # Add extra plugInfo.json include paths to the top-level plugInfo.json,
+     # relative to that top-level file.
++    if(PXR_INSTALL_DLL_IN_BIN AND WIN32)
++        set(runtimeInstallDir "bin")
++    else()
++        set(runtimeInstallDir "lib")
++    endif()
+     set(extraIncludes "")
+     list(REMOVE_DUPLICATES PXR_EXTRA_PLUGINS)
+     foreach(dirName ${PXR_EXTRA_PLUGINS})
+         file(RELATIVE_PATH
+             relDirName
+-            "${CMAKE_INSTALL_PREFIX}/lib/usd"
++            "${CMAKE_INSTALL_PREFIX}/${runtimeInstallDir}/usd"
+             "${CMAKE_INSTALL_PREFIX}/${dirName}"
+         )
+         set(extraIncludes "${extraIncludes},\n        \"${relDirName}/\"")
+@@ -1004,7 +1009,7 @@ function(pxr_setup_plugins)
+          "${plugInfoContents}")
+     install(
+         FILES "${CMAKE_CURRENT_BINARY_DIR}/plugins_plugInfo.json"
+-        DESTINATION lib/usd
++        DESTINATION ${runtimeInstallDir}/usd
+         RENAME "plugInfo.json"
+     )
+ 
+@@ -1117,17 +1122,23 @@ function(pxr_toplevel_prologue)
+                     IMPORT_PREFIX "${libPrefix}"
+             )
+             _get_install_dir("lib" libInstallPrefix)
++            _get_install_dir("bin" binInstallPrefix)
++            if(PXR_INSTALL_DLL_IN_BIN)
++                set(runtimeInstallPrefix "${binInstallPrefix}")
++            else()
++                set(runtimeInstallPrefix "${libInstallPrefix}")
++            endif()
+             install(
+                 TARGETS usd_ms
+                 EXPORT pxrTargets
+                 LIBRARY DESTINATION ${libInstallPrefix}
+                 ARCHIVE DESTINATION ${libInstallPrefix}
+-                RUNTIME DESTINATION ${libInstallPrefix}
++                RUNTIME DESTINATION ${runtimeInstallPrefix}
+             )
+             if(WIN32)
+                 install(
+                     FILES $<TARGET_PDB_FILE:usd_ms>
+-                    DESTINATION ${libInstallPrefix}
++                    DESTINATION ${runtimeInstallPrefix}
+                     OPTIONAL
+                 )
+             endif()

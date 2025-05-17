@@ -13,11 +13,10 @@ source:
     sha256: 231faca9ab71fa63d6c1e0da18bda0c365f82d9bef1cfd4b3d3d6784c8d5fb96
     patches:
       - link_python_to_executables.patch
+      - add_pxr_install_dll_in_bin.patch
 
 build:
   number: 2
-  skip:
-    - win
 
 requirements:
   build:
@@ -26,6 +25,11 @@ requirements:
     - ${{ compiler('cxx') }}
     - ninja
     - cmake
+    - if: build_platform != target_platform
+      then:
+        - cross-python_${{ target_platform }}
+        - python
+        - pyside6
   host:
     - if: linux
       then:
@@ -56,14 +60,10 @@ tests:
         - pxr/pxr.h
       lib:
         - usd_usd
-  - requirements:
-      run:
-        - cmake-package-check
-        - ${{ compiler('c') }}
-        - ${{ compiler('cxx') }}
-        - pip
-    script:
+  - script:
       - cmake-package-check pxr
+      # Specify the minimum number of usd plugins that should be found in the package
+      - python openusd_plugins_sanity_check.py 40
       - usdInitSchema --help
       - usdview --help
       - if: win
@@ -71,6 +71,15 @@ tests:
           - pip list | findstr "usd-core"
         else:
           - test $(pip list | grep usd-core | tr -s " " | grep ${PKG_VERSION/\.0/.} | wc -l) -eq 1
+    files:
+      recipe:
+        - openusd_plugins_sanity_check.py
+    requirements:
+      run:
+        - cmake-package-check
+        - ${{ compiler('c') }}
+        - ${{ compiler('cxx') }}
+        - pip
   - python:
       imports:
         - pxr
