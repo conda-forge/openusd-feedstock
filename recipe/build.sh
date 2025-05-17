@@ -25,6 +25,11 @@ if [[ "${target_platform}" == osx-* ]]; then
     export OPENUSD_ADDITIONAL_CTEST_TO_SKIP="testTfSIGSEGV|testTfSIGFPE|testTfSpan|testGfColorCpp|testGfHardToReach|testJsConverter|testJsUtils|testJsWriter|testJsWriter_Pretty|testJsDouble|testWorkDispatcher|testWorkLoops|testWorkReduce|testWorkSort|testWorkThreadLimitsDefault|testWorkThreadLimits1|testWorkThreadLimitsRawTBBMax|testWorkThreadLimitsRawTBB2|testSdfPathParser|testSdfPathTable|testSdfPathThreading|testUsdIntegerCoding|testUsdTimeCodeStream|testUsdZipFile_CPP|testUsdUtilsCoalescingDiagnosticDelegateCpp|testUsdUtilsTimeCodeRangeCpp|testHdDataSourceLocator|testHdSortedIds|testUsdImagingPrimvarUtils"
 fi
 
+if [[ "${build_platform}" != "${target_platform}" ]]; then
+    # Workaround for pyside6-uic not actually redirecting to the correct qt6-main uic
+    CMAKE_ARGS="${CMAKE_ARGS} -DPYSIDEUICBINARY=$BUILD_PREFIX/lib/qt6/uic"
+fi
+
 cmake ${CMAKE_ARGS} -GNinja .. \
       -DCMAKE_BUILD_TYPE=Release \
       -DBUILD_TESTING:BOOL=ON \
@@ -37,9 +42,12 @@ cmake ${CMAKE_ARGS} -GNinja .. \
 
 cmake --build . --config Release
 cmake --build . --config Release --target install
+
 # testWorkThreadLimits3 is disabled as it can fail on machines with few cores
 # testJsIO is disabled as it now actually links usd_tf, and so the linker remove the link to Python
-ctest --output-on-failure -C Release -E "testWorkThreadLimits3|testJsIO|${OPENUSD_ADDITIONAL_CTEST_TO_SKIP}"
+if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" || "${CROSSCOMPILING_EMULATOR}" != "" ]]; then
+    ctest --output-on-failure -C Release -E "testWorkThreadLimits3|testJsIO|${OPENUSD_ADDITIONAL_CTEST_TO_SKIP}"
+fi
 
 # The CMake install logic of openusd is not flexible, so let's fix the files
 # that should not be installed or should be installed in a different location
