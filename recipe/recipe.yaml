@@ -30,6 +30,7 @@ requirements:
       then:
         - cross-python_${{ target_platform }}
         - python
+        - pyside6
   host:
     - if: linux
       then:
