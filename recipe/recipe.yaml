@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   name: openusd
-  version: 25.05
+  version: "25.05.01"
 
 package:
   name: ${{ name }}
@@ -10,13 +10,13 @@ package:
 
 source:
   - url: https://github.com/PixarAnimationStudios/OpenUSD/archive/refs/tags/v${{ version }}.tar.gz
-    sha256: 231faca9ab71fa63d6c1e0da18bda0c365f82d9bef1cfd4b3d3d6784c8d5fb96
+    sha256: f424e8db26e063a1b005423ee52142e75c38185bbd4b8126ef64173e906dd50f
     patches:
       - link_python_to_executables.patch
       - add_pxr_install_dll_in_bin.patch
 
 build:
-  number: 2
+  number: 0
 
 requirements:
   build:
@@ -70,7 +70,7 @@ tests:
         then:
           - pip list | findstr "usd-core"
         else:
-          - test $(pip list | grep usd-core | tr -s " " | grep ${PKG_VERSION/\.0/.} | wc -l) -eq 1
+          - test $(pip list | grep usd-core | tr -s " " | grep ${PKG_VERSION//\.0/.} | wc -l) -eq 1
     files:
       recipe:
         - openusd_plugins_sanity_check.py

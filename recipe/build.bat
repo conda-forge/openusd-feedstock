@@ -54,8 +54,8 @@ rd /s /q "%LIBRARY_PREFIX%\share\usd\tutorials"
 if errorlevel 1 exit 1
 
 REM This logic is to ensure that pip list lists usd-core (https://pypi.org/project/usd-core/) as installed package
-REM The version style is a bit different: openusd version are something like 22.01, 23.05, 24.11 while usd-core are 22.1, 23.5, 24.11
-REM so we convert the first occurence of .0 to . if present, to convert from one style to another
+REM The version style is a bit different: openusd version are something like 22.01, 23.05.01, 24.11 while usd-core are 22.1, 23.5.1, 24.11
+REM so we convert all occurences of .0 to . if present, to convert from one style to another
 set "PIP_USD_CORE_VERSION=%PKG_VERSION:.0=.%"
 
 REM The METADATA file is necessary to ensure that pip list shows the pip package installed by conda
