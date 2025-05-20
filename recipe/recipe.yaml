@@ -70,7 +70,7 @@ tests:
         then:
           - pip list | findstr "usd-core"
         else:
-          - test $(pip list | grep usd-core | tr -s " " | grep ${PKG_VERSION/\.0/.} | wc -l) -eq 1
+          - test $(pip list | grep usd-core | tr -s " " | grep ${PKG_VERSION//\.0/.} | wc -l) -eq 1
     files:
       recipe:
         - openusd_plugins_sanity_check.py
