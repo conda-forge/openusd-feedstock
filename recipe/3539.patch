@@ -1,0 +1,12 @@
+diff --git a/pxr/imaging/hd/testenv/testHdSortedIds.cpp b/pxr/imaging/hd/testenv/testHdSortedIds.cpp
+index 469df5adf4..4ca7f543cc 100644
+--- a/pxr/imaging/hd/testenv/testHdSortedIds.cpp
++++ b/pxr/imaging/hd/testenv/testHdSortedIds.cpp
+@@ -8,6 +8,7 @@
+ #include "pxr/imaging/hd/sortedIds.h"
+ #include "pxr/usd/sdf/path.h"
+ #include "pxr/base/tf/errorMark.h"
++#include <chrono>
+ #include <random>
+ #include <algorithm>
+ #include <iterator>

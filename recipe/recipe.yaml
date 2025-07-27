@@ -14,9 +14,11 @@ source:
     patches:
       - link_python_to_executables.patch
       - add_pxr_install_dll_in_bin.patch
+      # Needed for vs2022 compat
+      - 3539.patch
 
 build:
-  number: 0
+  number: 1
 
 requirements:
   build:
@@ -47,7 +49,11 @@ requirements:
   run:
     - python
     # Without tbb-devel, CMake's find_package(pxr REQUIRED) fails
-    - tbb-devel
+    # Furthermore, openusd exposes internal header-only symbols of tbb in its public headers/public symbols,
+    # so even if the tbb itself is ABI stable, we need to pin the major minor version of tbb-devel to ensure that
+    # the symbols contained in the library match the one that the downstream consumers expect to use, see 
+    # https://github.com/conda-forge/openusd-feedstock/issues/9 for more details
+    - ${{ pin_compatible('tbb-devel', upper_bound='x.x') }}
     # Required by usdview
     - pyside6
     - pyopengl
