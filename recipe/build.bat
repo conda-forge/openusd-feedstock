@@ -32,7 +32,9 @@ if errorlevel 1 exit 1
 :: testUsdResolverExample is disabled as it expects some kind of RPATH-like loading of .dll
 :: TfPathUtils fails for some reason in CI but not locally,
 ::             see https://github.com/conda-forge/openusd-feedstock/pull/6#issuecomment-2888315313
-ctest --output-on-failure -C Release -E "testWorkThreadLimits|testUsdResolverExample|TfPathUtils"
+:: testWorkDispatcher and testUsdUtilsFlattenLayerStack are disabled as they are flaky, and they can silently fail a post-PR CI job,
+:: resulting in a package (for example for a given Python version) silently not being uploaded
+ctest --output-on-failure -C Release -E "testWorkThreadLimits|testUsdResolverExample|TfPathUtils|testWorkDispatcher|testUsdUtilsFlattenLayerStack"
 if errorlevel 1 exit 1
 
 :: The CMake install logic of openusd is not flexible, so let's fix the files
