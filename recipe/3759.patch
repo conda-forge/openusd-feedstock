@@ -1,0 +1,22 @@
+From 8fabd1e8cc3e0161ff4935fcb4b1e7b6ae659e14 Mon Sep 17 00:00:00 2001
+From: Silvio Traversaro <silvio@traversaro.it>
+Date: Tue, 29 Jul 2025 15:52:02 +0200
+Subject: [PATCH] pxrConfig.cmake.in : Do not pin exact Python patch version
+
+---
+ pxr/pxrConfig.cmake.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
+index ae8d02c5c0..951ce5f7a2 100644
+--- a/pxr/pxrConfig.cmake.in
++++ b/pxr/pxrConfig.cmake.in
+@@ -43,7 +43,7 @@ if(@PXR_ENABLE_PYTHON_SUPPORT@)
+     endif()
+ 
+     if (NOT DEFINED Python3_VERSION)
+-        find_dependency(Python3 "@Python3_VERSION@" EXACT COMPONENTS Development)
++        find_dependency(Python3 "@Python3_VERSION_MAJOR@.@Python3_VERSION_MINOR@" EXACT COMPONENTS Development)
+     else()
+         find_dependency(Python3 COMPONENTS Development)
+     endif()
