@@ -16,9 +16,11 @@ source:
       - add_pxr_install_dll_in_bin.patch
       # Needed for vs2022 compat
       - 3539.patch
+      # Fix https://github.com/conda-forge/openusd-feedstock/issues/11
+      - 3759.patch
 
 build:
-  number: 1
+  number: 2
 
 requirements:
   build:
