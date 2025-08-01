@@ -14,8 +14,6 @@ source:
     patches:
       - link_python_to_executables.patch
       - add_pxr_install_dll_in_bin.patch
-      # Needed for vs2022 compat
-      - 3539.patch
       # Fix https://github.com/conda-forge/openusd-feedstock/issues/11
       - 3759.patch
 
