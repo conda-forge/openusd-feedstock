@@ -16,6 +16,7 @@ source:
       - add_pxr_install_dll_in_bin.patch
       # Fix https://github.com/conda-forge/openusd-feedstock/issues/11
       - 3759.patch
+      - 3764.patch
 
 build:
   number: 0
