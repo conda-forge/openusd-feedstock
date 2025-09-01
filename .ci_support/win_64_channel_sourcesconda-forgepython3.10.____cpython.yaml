@@ -20,3 +20,6 @@ target_platform:
 - win-64
 tbb_devel:
 - '2021'
+zip_keys:
+- - python
+  - channel_sources
