@@ -18,7 +18,7 @@ source:
       - 3539.patch
       # Fix https://github.com/conda-forge/openusd-feedstock/issues/11
       - 3759.patch
-      - if osx:
+      - if: osx
         then:
           - macos_skip_rpath.patch
 
