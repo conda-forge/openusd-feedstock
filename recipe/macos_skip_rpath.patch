@@ -1,0 +1,25 @@
+From 80417e281b8c9d3aa80bd6daafbf6935a4b7ca32 Mon Sep 17 00:00:00 2001
+From: Silvio Traversaro <silvio@traversaro.it>
+Date: Wed, 22 Oct 2025 10:03:21 +0200
+Subject: [PATCH] Disable RPATH settings for macOS builds
+
+---
+ cmake/defaults/ProjectDefaults.cmake | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/cmake/defaults/ProjectDefaults.cmake b/cmake/defaults/ProjectDefaults.cmake
+index 6147f7b5061..2c19aba2b21 100644
+--- a/cmake/defaults/ProjectDefaults.cmake
++++ b/cmake/defaults/ProjectDefaults.cmake
+@@ -6,8 +6,9 @@
+ #
+ if(APPLE)
+     set(OSX_ARCHITECTURES "x86_64" CACHE STRING "Build architectures for OSX")
+-    set(CMAKE_MACOSX_RPATH ON)
+-    set(CMAKE_SKIP_BUILD_RPATH FALSE)
++    set(CMAKE_MACOSX_RPATH OFF)
++    set(CMAKE_SKIP_RPATH ON)
++    set(CMAKE_SKIP_BUILD_RPATH ON)
+     set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+     set(CMAKE_DYLIB_INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib" CACHE STRING "install_name path for dylib.")
+     list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
