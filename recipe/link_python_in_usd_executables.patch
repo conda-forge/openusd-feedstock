@@ -1,0 +1,41 @@
+From 99245c41f54491e1505a90e0650ed0e9c5e46ed8 Mon Sep 17 00:00:00 2001
+From: Silvio Traversaro <silvio@traversaro.it>
+Date: Sat, 29 Nov 2025 19:25:41 +0100
+Subject: [PATCH] Link Python for OpenUSD executables in CMake
+
+Add Python linking for OpenUSD binaries to handle transitive dependencies.
+---
+ cmake/macros/Public.cmake | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/cmake/macros/Public.cmake b/cmake/macros/Public.cmake
+index b8e588bf30..551fa3884c 100644
+--- a/cmake/macros/Public.cmake
++++ b/cmake/macros/Public.cmake
+@@ -167,6 +167,13 @@ function(pxr_cpp_bin BIN_NAME)
+ 
+     add_executable(${BIN_NAME} ${BIN_NAME}.cpp)
+ 
++    # The workaround in https://github.com/PixarAnimationStudios/OpenUSD/pull/3577 is not perfect in case of
++    # transitive dependencies, to be sure Python is linked at least for OpenUSD binaries we always link it
++    if(PXR_ENABLE_PYTHON_SUPPORT AND PXR_PY_UNDEFINED_DYNAMIC_LOOKUP)
++        target_link_libraries(${BIN_NAME} PRIVATE Python3::Python)
++    endif()
++
++
+     # Turn PIC ON otherwise ArchGetAddressInfo() on Linux may yield
+     # unexpected results.
+     _get_folder("" folder)
+@@ -644,6 +651,12 @@ function(pxr_build_test TEST_NAME)
+         ${bt_CPPFILES}
+     )
+ 
++    # The workaround in https://github.com/PixarAnimationStudios/OpenUSD/pull/3577 is not perfect in case of
++    # transitive dependencies, to be sure Python is linked at least for OpenUSD binaries we always link it
++    if(PXR_ENABLE_PYTHON_SUPPORT AND PXR_PY_UNDEFINED_DYNAMIC_LOOKUP)
++        target_link_libraries(${BIN_NAME} PRIVATE Python3::Python)
++    endif()
++
+     # Turn PIC ON otherwise ArchGetAddressInfo() on Linux may yield
+     # unexpected results.
+     _get_folder("tests/bin" folder)
