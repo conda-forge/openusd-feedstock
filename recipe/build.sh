@@ -45,8 +45,10 @@ cmake --build . --config Release --target install
 
 # testWorkThreadLimits3 is disabled as it can fail on machines with few cores
 # testJsIO is disabled as it now actually links usd_tf, and so the linker remove the link to Python
+# testExecGeomXformable_Perf_Large is disabled as it is disabled upstream, see 
+# https://github.com/PixarAnimationStudios/OpenUSD/blob/v25.11/.github/workflows/buildusd.yml#L83
 if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" || "${CROSSCOMPILING_EMULATOR}" != "" ]]; then
-    ctest --output-on-failure -C Release -E "testWorkThreadLimits3|testJsIO|${OPENUSD_ADDITIONAL_CTEST_TO_SKIP}"
+    ctest --output-on-failure -C Release -E "testWorkThreadLimits3|testJsIO|testExecGeomXformable_Perf_Large|${OPENUSD_ADDITIONAL_CTEST_TO_SKIP}"
 fi
 
 # The CMake install logic of openusd is not flexible, so let's fix the files
