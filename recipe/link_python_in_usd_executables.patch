@@ -19,7 +19,7 @@ index b8e588bf30..551fa3884c 100644
 +    # The workaround in https://github.com/PixarAnimationStudios/OpenUSD/pull/3577 is not perfect in case of
 +    # transitive dependencies, to be sure Python is linked at least for OpenUSD binaries we always link it
 +    if(PXR_ENABLE_PYTHON_SUPPORT AND PXR_PY_UNDEFINED_DYNAMIC_LOOKUP)
-+        target_link_libraries(${BIN_NAME} PRIVATE Python3::Python)
++        target_link_libraries(${BIN_NAME} Python3::Python)
 +    endif()
 +
 +
