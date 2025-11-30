@@ -45,6 +45,11 @@ cmake ${CMAKE_ARGS} -GNinja .. \
 cmake --build . --config Release
 cmake --build . --config Release --target install
 
+# Workaround for https://github.com/prefix-dev/rattler-build/issues/1955
+if [[ "${target_platform}" == osx-* ]]; then
+    sh "${RECIPE_DIR}/fix_rpaths_macos.sh"
+fi
+
 # testWorkThreadLimits3 is disabled as it can fail on machines with few cores
 # testJsIO is disabled as it now actually links usd_tf, and so the linker remove the link to Python
 # testExecGeomXformable_Perf_Large is disabled as it is disabled upstream, see 
