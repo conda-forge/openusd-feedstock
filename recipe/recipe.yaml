@@ -17,7 +17,6 @@ source:
       # Fix https://github.com/conda-forge/openusd-feedstock/issues/11
       - 3759.patch
       - 3764.patch
-      - link_python_in_usd_executables.patch
 
 build:
   number: 0
