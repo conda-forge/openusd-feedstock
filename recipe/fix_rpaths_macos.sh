@@ -3,7 +3,7 @@ set -eu
 
 : "${PREFIX:?PREFIX must be set}"
 
-MANIFEST="${SRC_DIR:-.}/build/install_manifest.txt"
+MANIFEST="install_manifest.txt"
 
 if [ ! -f "$MANIFEST" ]; then
     echo "install_manifest.txt not found at $MANIFEST" >&2
