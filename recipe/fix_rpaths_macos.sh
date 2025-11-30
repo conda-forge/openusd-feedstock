@@ -3,11 +3,7 @@ set -eu
 
 : "${PREFIX:?PREFIX must be set}"
 
-# If you cd into build/ before install, use this:
-MANIFEST="install_manifest.txt"
-
-# If you use -B build, use:
-# MANIFEST="${SRC_DIR:-.}/build/install_manifest.txt"
+MANIFEST="${SRC_DIR:-.}/build/install_manifest.txt"
 
 if [ ! -f "$MANIFEST" ]; then
     echo "install_manifest.txt not found at $MANIFEST" >&2
