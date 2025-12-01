@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   name: openusd
-  version: "25.05.01"
+  version: "25.08"
 
 package:
   name: ${{ name }}
@@ -10,17 +10,17 @@ package:
 
 source:
   - url: https://github.com/PixarAnimationStudios/OpenUSD/archive/refs/tags/v${{ version }}.tar.gz
-    sha256: f424e8db26e063a1b005423ee52142e75c38185bbd4b8126ef64173e906dd50f
+    sha256: 2a93c2390ae35a3e312f3fb66e6f403a0e046893e3f0d706be82963345a08cb3
     patches:
       - link_python_to_executables.patch
       - add_pxr_install_dll_in_bin.patch
-      # Needed for vs2022 compat
-      - 3539.patch
       # Fix https://github.com/conda-forge/openusd-feedstock/issues/11
       - 3759.patch
+      - 3764.patch
+      - remove_hardcoded_prefix.patch
 
 build:
-  number: 3
+  number: 0
 
 requirements:
   build:

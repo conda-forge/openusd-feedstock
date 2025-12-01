@@ -1,0 +1,52 @@
+diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
+index ae8d02c5c..693c24395 100644
+--- a/pxr/pxrConfig.cmake.in
++++ b/pxr/pxrConfig.cmake.in
+@@ -24,23 +24,23 @@ include(CMakeFindDependencyMacro)
+ # were set. This can be overridden by specifying different values when
+ # running cmake.
+ if(@PXR_ENABLE_PYTHON_SUPPORT@)
+-    if (NOT DEFINED Python3_EXECUTABLE)
+-        if (NOT [[@Python3_EXECUTABLE@]] STREQUAL "")
+-            set(Python3_EXECUTABLE [[@Python3_EXECUTABLE@]])
+-        endif()
+-    endif()
+ 
+-    if (NOT DEFINED Python3_LIBRARY)
+-        if (NOT [[@Python3_LIBRARY@]] STREQUAL "")
+-            set(Python3_LIBRARY [[@Python3_LIBRARY@]])
+-        endif()
+-    endif()
+ 
+-    if (NOT DEFINED Python3_INCLUDE_DIR)
+-        if (NOT [[@Python3_INCLUDE_DIR@]] STREQUAL "")
+-            set(Python3_INCLUDE_DIR [[@Python3_INCLUDE_DIR@]])
+-        endif()
+-    endif()
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
+ 
+     if (NOT DEFINED Python3_VERSION)
+         find_dependency(Python3 "@Python3_VERSION@" EXACT COMPONENTS Development)
+@@ -63,7 +63,7 @@ else()
+         endif()
+     endmacro()
+ 
+-    _add_property(INTERFACE_INCLUDE_DIRECTORIES "@tbb_INTERFACE_INCLUDE_DIRECTORIES@")
++
+     _add_property(INTERFACE_COMPILE_DEFINITIONS "@tbb_INTERFACE_COMPILE_DEFINITIONS@")
+     _add_property(INTERFACE_LINK_DIRECTORIES "@tbb_INTERFACE_LINK_DIRECTORIES@")
+     _add_property(IMPORTED_IMPLIB "@tbb_IMPORTED_IMPLIB@")

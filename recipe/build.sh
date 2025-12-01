@@ -23,6 +23,8 @@ if [[ "${target_platform}" == osx-* ]]; then
     CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY"
     # See https://github.com/conda-forge/openusd-feedstock/pull/1#issuecomment-2877628246
     export OPENUSD_ADDITIONAL_CTEST_TO_SKIP="testTfSIGSEGV|testTfSIGFPE|testTfSpan|testGfColorCpp|testGfHardToReach|testJsConverter|testJsUtils|testJsWriter|testJsWriter_Pretty|testJsDouble|testWorkDispatcher|testWorkLoops|testWorkReduce|testWorkSort|testWorkThreadLimitsDefault|testWorkThreadLimits1|testWorkThreadLimitsRawTBBMax|testWorkThreadLimitsRawTBB2|testSdfPathParser|testSdfPathTable|testSdfPathThreading|testUsdIntegerCoding|testUsdTimeCodeStream|testUsdZipFile_CPP|testUsdUtilsCoalescingDiagnosticDelegateCpp|testUsdUtilsTimeCodeRangeCpp|testHdDataSourceLocator|testHdSortedIds|testUsdImagingPrimvarUtils"
+    # See https://github.com/conda-forge/openusd-feedstock/pull/15#issuecomment-3591993975
+    export OPENUSD_ADDITIONAL_CTEST_TO_SKIP="$OPENUSD_ADDITIONAL_CTEST_TO_SKIP|testWorkThreadLimitsTBBDefault|testWorkThreadLimitsTBB1|testWorkThreadLimitsTBB3|testVtArrayEditCpp|testSdfIntegerCoding|testSdfTextFile|testSdfTextFile_1.1|testSdfZipFile_CPP|testVdfDefaultInitAllocator|testVdfMask|testVdfDynamicTopologicalSorter|testEfTime|testEsfFixedSizePolymorphicHolder|testEsfEditReason"
 fi
 
 if [[ "${build_platform}" != "${target_platform}" ]]; then
@@ -45,8 +47,15 @@ cmake --build . --config Release --target install
 
 # testWorkThreadLimits3 is disabled as it can fail on machines with few cores
 # testJsIO is disabled as it now actually links usd_tf, and so the linker remove the link to Python
+# testExecGeomXformable_Perf_Large is disabled as it is disabled upstream, see 
+# https://github.com/PixarAnimationStudios/OpenUSD/blob/v25.11/.github/workflows/buildusd.yml#L83
 if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" || "${CROSSCOMPILING_EMULATOR}" != "" ]]; then
-    ctest --output-on-failure -C Release -E "testWorkThreadLimits3|testJsIO|${OPENUSD_ADDITIONAL_CTEST_TO_SKIP}"
+    ctest --output-on-failure -C Release -E "testWorkThreadLimits3|testJsIO|testExecGeomXformable_Perf_Large|${OPENUSD_ADDITIONAL_CTEST_TO_SKIP}"
+fi
+
+# Workaround for https://github.com/prefix-dev/rattler-build/issues/1955
+if [[ "${target_platform}" == osx-* ]]; then
+    sh "${RECIPE_DIR}/fix_rpaths_macos.sh"
 fi
 
 # The CMake install logic of openusd is not flexible, so let's fix the files

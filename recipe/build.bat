@@ -34,7 +34,9 @@ if errorlevel 1 exit 1
 ::             see https://github.com/conda-forge/openusd-feedstock/pull/6#issuecomment-2888315313
 :: testWorkDispatcher and testUsdUtilsFlattenLayerStack are disabled as they are flaky, and they can silently fail a post-PR CI job,
 :: resulting in a package (for example for a given Python version) silently not being uploaded
-ctest --output-on-failure -C Release -E "testWorkThreadLimits|testUsdResolverExample|TfPathUtils|testWorkDispatcher|testUsdUtilsFlattenLayerStack"
+:: testExecGeomXformable_Perf_Large is disabled as it is disabled upstream, see 
+:: https://github.com/PixarAnimationStudios/OpenUSD/blob/v25.11/.github/workflows/buildusd.yml#L83
+ctest --output-on-failure -C Release -E "testWorkThreadLimits|testUsdResolverExample|TfPathUtils|testWorkDispatcher|testUsdUtilsFlattenLayerStack|testExecGeomXformable_Perf_Large"
 if errorlevel 1 exit 1
 
 :: The CMake install logic of openusd is not flexible, so let's fix the files
