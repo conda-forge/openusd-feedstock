@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   name: openusd
-  version: "25.08"
+  version: "25.11"
 
 package:
   name: ${{ name }}
@@ -10,7 +10,7 @@ package:
 
 source:
   - url: https://github.com/PixarAnimationStudios/OpenUSD/archive/refs/tags/v${{ version }}.tar.gz
-    sha256: 2a93c2390ae35a3e312f3fb66e6f403a0e046893e3f0d706be82963345a08cb3
+    sha256: c37c633b5037a4552f61574670ecca8836229b78326bd62622f3422671188667
     patches:
       - link_python_to_executables.patch
       - add_pxr_install_dll_in_bin.patch
