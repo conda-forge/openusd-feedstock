@@ -21,9 +21,6 @@ source:
 
 build:
   number: 0
-  skip:
-    - not (osx or win)
-    - python and not match(python, "3.12.*")
 
 requirements:
   build:
