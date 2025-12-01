@@ -24,7 +24,7 @@ if [[ "${target_platform}" == osx-* ]]; then
     # See https://github.com/conda-forge/openusd-feedstock/pull/1#issuecomment-2877628246
     export OPENUSD_ADDITIONAL_CTEST_TO_SKIP="testTfSIGSEGV|testTfSIGFPE|testTfSpan|testGfColorCpp|testGfHardToReach|testJsConverter|testJsUtils|testJsWriter|testJsWriter_Pretty|testJsDouble|testWorkDispatcher|testWorkLoops|testWorkReduce|testWorkSort|testWorkThreadLimitsDefault|testWorkThreadLimits1|testWorkThreadLimitsRawTBBMax|testWorkThreadLimitsRawTBB2|testSdfPathParser|testSdfPathTable|testSdfPathThreading|testUsdIntegerCoding|testUsdTimeCodeStream|testUsdZipFile_CPP|testUsdUtilsCoalescingDiagnosticDelegateCpp|testUsdUtilsTimeCodeRangeCpp|testHdDataSourceLocator|testHdSortedIds|testUsdImagingPrimvarUtils"
     # See https://github.com/conda-forge/openusd-feedstock/pull/15#issuecomment-3591993975
-    export OPENUSD_ADDITIONAL_CTEST_TO_SKIP="$OPENUSD_ADDITIONAL_CTEST_TO_SKIP|testWorkThreadLimitsTBBDefault|testWorkThreadLimitsTBB1|testWorkThreadLimitsTBB3|testVtArrayEditCpp|testSdfIntegerCoding|testSdfTextFile|testSdfTextFile_1.1|testSdfZipFile_CPP|testVdfDefaultInitAllocator|testVdfMask|testVdfDynamicTopologicalSorter|testEfTime|testEsfFixedSizePolymorphicHolder|testEsfEditReason"
+    export OPENUSD_ADDITIONAL_CTEST_TO_SKIP="$OPENUSD_ADDITIONAL_CTEST_TO_SKIP|testWorkThreadLimitsTBBDefault|testWorkThreadLimitsTBB1|testWorkThreadLimitsTBB3|testVtArrayEditCpp|testSdfIntegerCoding|testSdfTextFile|testSdfTextFile_1.1|testSdfZipFile_CPP|testVdfDefaultInitAllocator|testVdfMask|testVdfDynamicTopologicalSorter|testEfTime|testEsfFixedSizePolymorphicHolder|testEsfEditReason|testVdfConnectorMap"
 fi
 
 if [[ "${build_platform}" != "${target_platform}" ]]; then
