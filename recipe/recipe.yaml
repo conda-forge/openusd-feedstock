@@ -20,7 +20,7 @@ source:
 
 build:
   number: 2
-  skip: linux-ppc64le
+  skip: ppc64le
 
 requirements:
   build:
