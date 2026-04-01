@@ -28,7 +28,7 @@ requirements:
     - ${{ stdlib('c') }}
     - ${{ compiler('cxx') }}
     - ninja
-    - cmake
+    - cmake >=3.26
     - if: build_platform != target_platform
       then:
         - cross-python_${{ target_platform }}
@@ -43,7 +43,7 @@ requirements:
     - glfw
     - tbb-devel
     - libboost-devel
-    - libopensubdiv
+    - libopensubdiv 3.*
     - python
     - jinja2
     - pyside6
