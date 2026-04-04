@@ -142,8 +142,8 @@ index 2647707ac6..49a3ff80a7 100644
          RENAME "plugInfo.json"
      )
  
-@@ -1117,17 +1122,23 @@ function(pxr_toplevel_prologue)
-                     IMPORT_PREFIX "${libPrefix}"
+@@ -1197,14 +1207,20 @@ function(pxr_toplevel_prologue)
+                     OUTPUT_NAME ${libName}
              )
              _get_install_dir("lib" libInstallPrefix)
 +            _get_install_dir("bin" binInstallPrefix)
@@ -153,16 +153,16 @@ index 2647707ac6..49a3ff80a7 100644
 +                set(runtimeInstallPrefix "${libInstallPrefix}")
 +            endif()
              install(
-                 TARGETS usd_ms
+                 TARGETS usd_m
                  EXPORT pxrTargets
                  LIBRARY DESTINATION ${libInstallPrefix}
                  ARCHIVE DESTINATION ${libInstallPrefix}
 -                RUNTIME DESTINATION ${libInstallPrefix}
 +                RUNTIME DESTINATION ${runtimeInstallPrefix}
              )
-             if(WIN32)
+             if(WIN32 AND BUILD_SHARED_LIBS)
                  install(
-                     FILES $<TARGET_PDB_FILE:usd_ms>
+                     FILES $<TARGET_PDB_FILE:usd_m>
 -                    DESTINATION ${libInstallPrefix}
 +                    DESTINATION ${runtimeInstallPrefix}
                      OPTIONAL
