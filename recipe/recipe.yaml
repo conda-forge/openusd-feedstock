@@ -43,7 +43,7 @@ requirements:
     - glfw
     - tbb-devel
     - libboost-devel
-    - libopensubdiv 3.*
+    - libopensubdiv
     - python
     - jinja2
     - pyside6
