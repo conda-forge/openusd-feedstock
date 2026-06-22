@@ -19,7 +19,7 @@ source:
       - remove_hardcoded_prefix.patch
 
 build:
-  number: 0
+  number: 1
   skip: ppc64le
 
 requirements:
@@ -42,7 +42,6 @@ requirements:
         - xorg-libxrandr
     - glfw
     - tbb-devel
-    - libboost-devel
     - libopensubdiv
     - python
     - jinja2
@@ -53,7 +52,7 @@ requirements:
     # Without tbb-devel, CMake's find_package(pxr REQUIRED) fails
     # Furthermore, openusd exposes internal header-only symbols of tbb in its public headers/public symbols,
     # so even if the tbb itself is ABI stable, we need to pin the major minor version of tbb-devel to ensure that
-    # the symbols contained in the library match the one that the downstream consumers expect to use, see 
+    # the symbols contained in the library match the one that the downstream consumers expect to use, see
     # https://github.com/conda-forge/openusd-feedstock/issues/9 for more details
     - ${{ pin_compatible('tbb-devel', upper_bound='x.x') }}
     # Required by usdview
