@@ -232,5 +232,6 @@ In order to produce a uniquely identifiable distribution:
 Feedstock Maintainers
 =====================
 
+* [@oursland](https://github.com/oursland/)
 * [@traversaro](https://github.com/traversaro/)
 
