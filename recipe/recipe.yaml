@@ -17,9 +17,14 @@ source:
       # Fix https://github.com/conda-forge/openusd-feedstock/issues/11
       - 3759.patch
       - remove_hardcoded_prefix.patch
+      # Explicitly include <tbb/version.h> so TBB_INTERFACE_VERSION_MAJOR is
+      # defined when selecting the oneTBB task_group backend. Recent oneTBB
+      # (the "tbb 2023" migration) no longer defines it via <tbb/blocked_range.h>,
+      # which made the workTBB backend fall back to the removed legacy tbb::task API.
+      - fix_tbb_version_macro.patch
 
 build:
-  number: 1
+  number: 2
   skip: ppc64le
 
 requirements:
