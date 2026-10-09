@@ -15,6 +15,7 @@ source:
       - link_python_to_executables.patch
       - add_pxr_install_dll_in_bin.patch
       - remove_hardcoded_prefix.patch
+      - python315_pyweakref_getref.patch
 
 build:
   number: 1
@@ -42,6 +43,7 @@ requirements:
     - tbb-devel
     - libopensubdiv
     - python
+    - libpython
     - jinja2
     - pyside6
     - pyopengl
