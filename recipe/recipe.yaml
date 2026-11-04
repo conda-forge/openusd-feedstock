@@ -17,7 +17,7 @@ source:
       - remove_hardcoded_prefix.patch
 
 build:
-  number: 1
+  number: 2
   skip: ppc64le
 
 requirements:
@@ -41,6 +41,9 @@ requirements:
     - glfw
     - tbb-devel
     - libopensubdiv
+    # Required by PXR_ENABLE_MATERIALX_SUPPORT (usdMtlx, hdMtlx), see
+    # https://github.com/conda-forge/usd-exchange-feedstock/issues/13
+    - libmaterialx
     - python
     - jinja2
     - pyside6
@@ -63,8 +66,12 @@ tests:
   - package_contents:
       include:
         - pxr/pxr.h
+        - pxr/usd/usdMtlx/api.h
+        - pxr/imaging/hdMtlx/hdMtlx.h
       lib:
         - usd_usd
+        - usd_usdMtlx
+        - usd_hdMtlx
   - script:
       - cmake-package-check pxr
       # Specify the minimum number of usd plugins that should be found in the package
@@ -90,6 +97,7 @@ tests:
         - pxr
         - pxr.Usd
         - pxr.UsdGeom
+        - pxr.UsdMtlx
 
 about:
   # The main openusd license is the Tomorrow Open Source Technology License 1.0 (see https://forum.aousd.org/t/upcoming-openusd-license-update/1561)
