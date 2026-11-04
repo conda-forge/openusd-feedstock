@@ -14,6 +14,7 @@ cmake %CMAKE_ARGS% ^
     -DPXR_BUILD_IMAGING:BOOL=ON ^
     -DPXR_BUILD_USD_IMAGING=ON ^
     -DPXR_ENABLE_PYTHON_SUPPORT=ON ^
+    -DPXR_ENABLE_MATERIALX_SUPPORT:BOOL=ON ^
     -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY:BOOL=ON ^
     -DPXR_PYTHON_SHEBANG="/usr/bin/env python" ^
     -DPXR_PYTHON_INSTALL_DIR=lib/python ^
@@ -40,9 +41,11 @@ if errorlevel 1 exit 1
 :: resulting in a package (for example for a given Python version) silently not being uploaded
 :: testExecGeomXformable_Perf_Large is disabled as it is disabled upstream, see 
 :: https://github.com/PixarAnimationStudios/OpenUSD/blob/v25.11/.github/workflows/buildusd.yml#L83
+:: testUsdImagingHdMtlx* are disabled as they were reported to fail on Windows against a shared MaterialX,
+:: see https://github.com/conda-forge/usd-exchange-feedstock/issues/13
 :: --no-tests=ignore keeps ctest from erroring when no tests are registered
 :: (recent ctest defaults that action to "error").
-ctest --output-on-failure --no-tests=ignore -C Release -E "testWorkThreadLimits|testUsdResolverExample|TfPathUtils|testWorkDispatcher|testUsdUtilsFlattenLayerStack|testExecGeomXformable_Perf_Large"
+ctest --output-on-failure --no-tests=ignore -C Release -E "testWorkThreadLimits|testUsdResolverExample|TfPathUtils|testWorkDispatcher|testUsdUtilsFlattenLayerStack|testExecGeomXformable_Perf_Large|testUsdImagingHdMtlx"
 if errorlevel 1 exit 1
 
 :: The CMake install logic of openusd is not flexible, so let's fix the files
